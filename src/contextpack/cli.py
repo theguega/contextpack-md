@@ -1,5 +1,5 @@
 import typer
-from .api import query_url, ask_web
+from .api import query_url, ask_web, ingest_repo
 
 app = typer.Typer(add_completion=False)
 
@@ -25,6 +25,19 @@ def ask(question: str):
     result = ask_web(question)
     typer.echo("\n--- Final Context Pack ---\n")
     typer.echo(result.context)
+
+@app.command()
+def repo(url: str):
+    """
+    Ingest a code repository and extract text-based files.
+    """
+    typer.echo(f"📦 Ingesting repository: {url}...")
+    try:
+        result = ingest_repo(url)
+        typer.echo("\n--- Final Context Pack ---\n")
+        typer.echo(result.context)
+    except Exception as e:
+        typer.echo(f"❌ Error: {e}")
 
 if __name__ == "__main__":
     app()
