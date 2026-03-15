@@ -1,5 +1,7 @@
 import typer
-from .api import query_url, ask_web
+import os
+from .api import query_url, ask_web, summarize_context
+from .scraper import extract_pdf_content, fetch_and_scrape
 
 app = typer.Typer(add_completion=False)
 
@@ -24,6 +26,47 @@ def ask(question: str):
     typer.echo(f"🔎 Searching the web for: '{question}'...")
     result = ask_web(question)
     typer.echo("\n--- Final Context Pack ---\n")
+    typer.echo(result.context)
+
+@app.command()
+def summarize(
+    source: str,
+    task: str = typer.Option(..., help="The specific user task to summarize the context for"),
+    model: str = typer.Option("gpt-3.5-turbo", help="The LiteLLM supported model string (e.g. gpt-4o, ollama/llama3, etc.)")
+):
+    """
+    Condense extracted documents or PDFs into highly relevant context for a specific user task.
+    """
+    typer.echo(f"📝 Summarizing source: '{source}' for task: '{task}' using model: '{model}'...")
+
+    text = None
+
+    # Check if source is a URL or a local file path
+    if source.startswith("http://") or source.startswith("https://"):
+        text = fetch_and_scrape(source)
+    else:
+        # Check if local file exists
+        if not os.path.exists(source):
+            typer.echo(f"❌ Error: Local file not found: {source}")
+            raise typer.Exit(code=1)
+
+        if source.lower().endswith(".pdf"):
+            text = extract_pdf_content(source)
+        else:
+            try:
+                with open(source, 'r', encoding='utf-8') as f:
+                    text = f.read()
+            except Exception as e:
+                typer.echo(f"❌ Error reading file {source}: {e}")
+                raise typer.Exit(code=1)
+
+    if not text:
+        typer.echo("❌ Error: Could not extract content from the source.")
+        raise typer.Exit(code=1)
+
+    result = summarize_context(text, task, model)
+
+    typer.echo("\n--- Final Summarized Context ---\n")
     typer.echo(result.context)
 
 if __name__ == "__main__":

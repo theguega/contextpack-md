@@ -7,6 +7,21 @@ from .scraper import fetch_and_scrape
 from .chunker import split_into_chunks
 from .ranker import rank_chunks
 from .formatter import format_context_pack
+from .summarizer import summarize_text
+
+def summarize_context(context: str, task: str, model: str) -> ContextPackResult:
+    """
+    Condenses the provided context based on a task using an LLM.
+    """
+    summary = summarize_text(context, task, model)
+
+    result = ContextPackResult(
+        query=task,
+        sources=[],
+        chunks=[ContextChunk(text=summary, source_url="summary")],
+        context=summary
+    )
+    return result
 
 def query_url(url: str, max_depth: int = 2, max_pages: int = 10) -> ContextPackResult:
     """
