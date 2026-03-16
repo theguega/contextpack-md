@@ -6,6 +6,7 @@ An open-source tool to extract high-quality context from websites and documentat
 
 - **Query Documentation**: Crawl and extract content from documentation pages recursively.
 - **Ask Web**: Search the web and gather relevant context chunks ranked by similarity.
+- **Repository Ingestion**: Ingest code repositories natively. Respects `.gitignore` and ignores lock files/binaries.
 - **LLM-Ready**: Outputs clean markdown optimized for LLM prompts.
 - **Library-First**: Can be used as a CLI tool or a Python library.
 - **Stateless & Portable**: Works as a standalone tool or a microservice component.
@@ -38,6 +39,13 @@ Automatically gather relevant context from the web for a question. It uses DuckD
 uv run contextpack ask "how ros2 qos works"
 ```
 
+### Ingest Repository
+Clone and ingest a GitHub repository to extract text-based files. Automatically skips binary files, huge assets, and lock files, strictly respecting `.gitignore` rules.
+
+```bash
+uv run contextpack repo https://github.com/tiangolo/typer.git
+```
+
 ## Python Library Usage
 
 The library is designed to be easily integrated into AI agents or pipelines.
@@ -56,12 +64,18 @@ print(result.context)
 # Ask the web
 result = ask_web("how ros2 qos works")
 print(result.context)
+
+# Ingest a repository
+from contextpack import ingest_repo
+repo_result = ingest_repo("https://github.com/tiangolo/typer.git")
+print(repo_result.context)
 ```
 
 ## Architecture
 
 The project follows a library-first architecture:
 - `api.py`: Core orchestration API.
+- `repo.py`: GitHub repository ingestion module.
 - `crawler.py`: Recursive documentation crawler (domain-constrained).
 - `scraper.py`: Content extraction using `trafilatura`.
 - `chunker.py`: Paragraph-aware text splitting.

@@ -9,7 +9,38 @@ from .ranker import rank_chunks
 from .formatter import format_context_pack
 from .pdf import extract_pdf_text
 from .arxiv import fetch_arxiv_data
+from .repo import ingest_repo_files
 import os
+
+def ingest_repo(repo_url: str) -> ContextPackResult:
+    """
+    Ingests a repository from a URL, extracting text-based code files.
+    """
+    files_content = ingest_repo_files(repo_url)
+
+    sources = []
+    all_chunks = []
+
+    parsed_url = urlparse(repo_url)
+    domain = parsed_url.netloc
+
+    sources.append(ContextSource(url=repo_url, domain=domain))
+
+    for file_path, content in files_content.items():
+        # Prepend file path to content for context
+        file_text = f"File: {file_path}\n\n{content}"
+        chunks = split_into_chunks(file_text)
+        for chunk_text in chunks:
+            all_chunks.append(ContextChunk(text=chunk_text, source_url=repo_url))
+
+    result = ContextPackResult(
+        query=f"Repository ingestion for {repo_url}",
+        sources=sources,
+        chunks=all_chunks,
+        context=""
+    )
+    result.context = format_context_pack(result)
+    return result
 
 def query_url(url: str, max_depth: int = 2, max_pages: int = 10) -> ContextPackResult:
     """
