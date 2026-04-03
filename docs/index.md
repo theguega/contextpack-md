@@ -1,4 +1,4 @@
-# 📦 contextpack
+# 📦 contextpack-md
 
 A dead-simple tool to extract high-quality Markdown from any URL for LLMs.
 
@@ -6,15 +6,15 @@ A dead-simple tool to extract high-quality Markdown from any URL for LLMs.
 
 ```bash
 # Get context to stdout
-uvx contextpack https://docs.python.org/3/
+uvx contextpack-md https://docs.python.org/3/
 
 # Download a PDF and convert to Markdown
-uvx contextpack pdf https://arxiv.org/pdf/1706.03762.pdf
+uvx contextpack-md pdf https://arxiv.org/pdf/1706.03762.pdf
 ```
 
 ## ✨ Features
 
 - **Single Purpose**: Get clean, LLM-ready Markdown from a URL.
 - **PDF Support**: Convert online PDFs to high-quality Markdown using `marker-pdf`.
-- **Optional Local Storage**: Save results to a `.contextpack` folder.
+- **Optional Local Storage**: Save results to a `.contextpack-md` folder.
 - **Zero Configuration**: No complex ranking, crawling, or embedding setups.

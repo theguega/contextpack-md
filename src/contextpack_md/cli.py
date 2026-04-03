@@ -9,7 +9,7 @@ from .api import convert_pdf_to_markdown, download_pdf, get_url_context
 
 app = typer.Typer(add_completion=False)
 
-CONTEXTPACK_DIR = Path.home() / ".contextpack"
+CONTEXTPACK_DIR = Path.home() / ".contextpack-md"
 
 
 def clean_domain(url: str) -> str:
@@ -22,7 +22,7 @@ def clean_domain(url: str) -> str:
 def web(
     url: str = typer.Argument(help="URL to extract context from"),
     write: bool = typer.Option(
-        False, "--write", "-w", help="Write result to .contextpack folder"
+        False, "--write", "-w", help="Write result to .contextpack-md folder"
     ),
     output_dir: Optional[Path] = typer.Argument(None, help="Output directory path"),
 ):
@@ -42,6 +42,7 @@ def web(
 
     if write:
         dir = output_dir if output_dir else CONTEXTPACK_DIR
+        dir.mkdir(parents=True, exist_ok=True)
         domain = clean_domain(url)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = f"{domain}_{timestamp}.md"
@@ -60,7 +61,7 @@ def web(
 @app.command()
 def clear():
     """
-    Clear the contextpack cache directory.
+    Clear the contextpack-md cache directory.
     """
     if CONTEXTPACK_DIR.exists():
         files = list(CONTEXTPACK_DIR.glob("*"))
@@ -81,7 +82,7 @@ def pdf(
     Download a PDF and convert it to Markdown using marker-pdf.
     """
     dir = output_dir or CONTEXTPACK_DIR
-    dir.mkdir(exist_ok=True)
+    dir.mkdir(parents=True, exist_ok=True)
 
     domain = clean_domain(url)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

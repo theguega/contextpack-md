@@ -1,22 +1,25 @@
-# Contributing to contextpack
+# Contributing to contextpack-md
 
-First off, thank you for considering contributing to `contextpack`! It's people like you who make it a great tool for everyone.
+First off, thank you for considering contributing to `contextpack-md`! It's people like you who make it a great tool for everyone.
 
 ## Code of Conduct
 
-By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
+By participating in this project, you agree to abide by our [Code of Conduct](https://github.com/theguega/contextpack-md/blob/main/CODE_OF_CONDUCT.md).
 
 ## How Can I Contribute?
 
 ### Reporting Bugs
-* Check the [GitHub Issues](https://github.com/theguega/contextpack/issues) to see if the bug has already been reported.
-* If not, open a new issue. Include a clear title, a detailed description, and a way to reproduce the error.
+
+- Check the [GitHub Issues](https://github.com/theguega/contextpack-md/issues) to see if the bug has already been reported.
+- If not, open a new issue. Include a clear title, a detailed description, and a way to reproduce the error.
 
 ### Suggesting Enhancements
-* Open a new issue with the "enhancement" label.
-* Describe the feature and why it would be useful.
+
+- Open a new issue with the "enhancement" label.
+- Describe the feature and why it would be useful.
 
 ### Pull Requests
+
 1. Fork the repo and create your branch from `main`.
 2. If you've added code that should be tested, add tests.
 3. Ensure the test suite passes.
@@ -29,14 +32,14 @@ This project uses [uv](https://github.com/astral-sh/uv) for dependency managemen
 
 ```bash
 # Clone the repository
-git clone https://github.com/theguega/contextpack.git
-cd contextpack
+git clone https://github.com/theguega/contextpack-md.git
+cd contextpack-md
 
 # Sync dependencies
 uv sync --all-groups
 
 # Run the CLI in development
-uv run contextpack --help
+uv run contextpack-md --help
 ```
 
 ### Linting & Formatting
@@ -54,7 +57,7 @@ uv run ruff format .
 
 ## Style Guide
 
-* Use Type Hints for all function signatures.
-* Follow PEP 8 conventions.
-* Keep functions small and focused on a single task.
-* Write descriptive docstrings for all public APIs.
+- Use Type Hints for all function signatures.
+- Follow PEP 8 conventions.
+- Keep functions small and focused on a single task.
+- Write descriptive docstrings for all public APIs.

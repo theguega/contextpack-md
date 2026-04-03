@@ -1,9 +1,9 @@
 # 🧩 API Reference
 
-::: contextpack.api
-    options:
-      show_root_heading: true
+::: contextpack_md.api
+options:
+show_root_heading: true
 
-::: contextpack.scraper
-    options:
-      show_root_heading: true
+::: contextpack_md.scraper
+options:
+show_root_heading: true

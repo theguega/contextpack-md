@@ -1,6 +1,6 @@
 [project]
-name = "contextpack"
-version = "0.1.1"
+name = "contextpack-md"
+version = "0.2.1"
 description = "A dead-simple tool to extract high-quality Markdown from any URL or PDF for LLMs"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [project.scripts]
-contextpack = "contextpack.cli:app"
+contextpack-md = "contextpack_md.cli:app"
 
 [project.optional-dependencies]
 pdf = [
@@ -35,17 +35,20 @@ requires = ["uv_build>=0.11.3,<0.12"]
 build-backend = "uv_build"
 
 [tool.pyapp]
-project = "contextpack"
-module = "contextpack.cli"
+project = "contextpack-md"
+module = "contextpack_md.cli"
 command = "app"
 python-version = "3.12"
 features = ["pip"]
 
 [dependency-groups]
 dev = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.6",
+    "mkdocstrings[python]>=1.0.3",
     "pytest>=9.0.2",
     "ruff>=0.15.9",
 ]
 
 [project.urls]
-Documentation = "https://theguega.github.io/contextpack/"
+Documentation = "https://theguega.github.io/contextpack-md/"

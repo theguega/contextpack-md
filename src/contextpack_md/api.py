@@ -46,7 +46,7 @@ def convert_pdf_to_markdown(pdf_path: Path) -> Optional[str]:
         return text
     except ImportError:
         print(
-            "Error: marker-pdf is not installed. Please install it with 'pip install \"contextpack[pdf]\"'"
+            "Error: marker-pdf is not installed. Please install it with 'pip install \"contextpack-md[pdf]\"'"
         )
         return None
     except Exception as e:

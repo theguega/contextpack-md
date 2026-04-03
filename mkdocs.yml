@@ -1,6 +1,6 @@
-site_name: contextpack
-site_url: https://theguega.github.io/contextpack/
-repo_url: https://github.com/theguega/contextpack
+site_name: contextpack-md
+site_url: https://theguega.github.io/contextpack-md/
+repo_url: https://github.com/theguega/contextpack-md
 edit_uri: edit/main/docs/
 
 theme:
