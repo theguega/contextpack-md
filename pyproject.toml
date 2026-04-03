@@ -6,11 +6,7 @@ authors = [{ name = "Theo", email = "130441797+theguega@users.noreply.github.com
 
 dependencies = [
   "typer>=0.24.0,<0.25",
-  "requests>=2.32.5,<3",
   "trafilatura>=2.0.0,<3",
-  "beautifulsoup4>=4.14.3,<5",
-  "sentence-transformers>=5.3.0,<6",
-  "numpy>=2.4.2,<3",
   "httpx>=0.28.1,<0.29",
 ]
 
@@ -21,31 +17,10 @@ contextpack = "contextpack.cli:app"
 dev = [
   "ruff>=0.15.5,<0.16"
 ]
+pdf = [
+  "marker-pdf>=0.3.14"
+]
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
-
-# ---------------------------
-# PIXI CONFIGURATION
-# ---------------------------
-
-[tool.pixi.workspace]
-channels = ["conda-forge"]
-platforms = ["osx-64"]
-
-[tool.pixi.pypi-dependencies]
-contextpack = { path = ".", editable = true }
-
-[tool.pixi.dependencies]
-typer = ">=0.24.0,<0.25"
-requests = ">=2.32.5,<3"
-trafilatura = ">=2.0.0,<3"
-beautifulsoup4 = ">=4.14.3,<5"
-sentence-transformers = ">=5.3.0,<6"
-numpy = ">=2.4.2,<3"
-httpx = ">=0.28.1,<0.29"
-ruff = ">=0.15.5,<0.16"
-
-[tool.pixi.tasks]
+requires = ["uv_build>=0.11.3,<0.12"]
+build-backend = "uv_build"

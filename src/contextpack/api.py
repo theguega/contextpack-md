@@ -1,73 +1,47 @@
-from typing import List
-from urllib.parse import urlparse
-from .models import ContextPackResult, ContextSource, ContextChunk
-from .crawler import crawl_documentation
-from .search import search_duckduckgo
+import os
+import httpx
+from typing import Optional
 from .scraper import fetch_and_scrape
-from .chunker import split_into_chunks
-from .ranker import rank_chunks
-from .formatter import format_context_pack
 
-def query_url(url: str, max_depth: int = 2, max_pages: int = 10) -> ContextPackResult:
+def get_url_context(url: str) -> Optional[str]:
     """
-    Extracts documentation context starting from a given page.
+    Fetches and scrapes a single URL to return clean Markdown.
     """
-    content_map = crawl_documentation(url, max_depth=max_depth, max_pages=max_pages)
-    
-    sources = []
-    all_chunks = []
-    
-    parsed_url = urlparse(url)
-    domain = parsed_url.netloc
-    
-    for page_url, content in content_map.items():
-        sources.append(ContextSource(url=page_url, domain=domain))
-        chunks = split_into_chunks(content)
-        for chunk_text in chunks:
-            all_chunks.append(ContextChunk(text=chunk_text, source_url=page_url))
-            
-    # For query_url, we just take the first chunks or a sample if too many, 
-    # but the prompt says aggregate content. 
-    # If it's for documentation, maybe we just return top chunks by some relevance to the URL itself 
-    # or just return them all if small enough.
-    # Let's use the first part of the first page as a "query" for ranking if we have too many.
-    query = url
-    top_chunks = rank_chunks(query, all_chunks, top_k=20) if len(all_chunks) > 20 else all_chunks
-    
-    result = ContextPackResult(
-        query=f"Documentation for {url}",
-        sources=sources,
-        chunks=top_chunks,
-        context=""
-    )
-    result.context = format_context_pack(result)
-    return result
+    return fetch_and_scrape(url)
 
-def ask_web(question: str) -> ContextPackResult:
+def download_pdf(url: str, save_path: str) -> bool:
     """
-    Automatically gathers relevant context from the web.
+    Downloads a PDF file from a URL.
     """
-    urls = search_duckduckgo(question)
-    
-    sources = []
-    all_chunks = []
-    
-    for url in urls:
-        content = fetch_and_scrape(url)
-        if content:
-            domain = urlparse(url).netloc
-            sources.append(ContextSource(url=url, domain=domain))
-            chunks = split_into_chunks(content)
-            for chunk_text in chunks:
-                all_chunks.append(ContextChunk(text=chunk_text, source_url=url))
-                
-    top_chunks = rank_chunks(question, all_chunks, top_k=10)
-    
-    result = ContextPackResult(
-        query=question,
-        sources=sources,
-        chunks=top_chunks,
-        context=""
-    )
-    result.context = format_context_pack(result)
-    return result
+    try:
+        with httpx.Client(follow_redirects=True) as client:
+            response = client.get(url)
+            response.raise_for_status()
+            with open(save_path, "wb") as f:
+                f.write(response.content)
+            return True
+    except Exception as e:
+        print(f"Error downloading PDF: {e}")
+        return False
+
+def convert_pdf_to_markdown(pdf_path: str) -> Optional[str]:
+    """
+    Converts a PDF file to Markdown using marker-pdf.
+    """
+    try:
+        from marker.converters.pdf import PdfConverter
+        from marker.models import create_model_dict
+        from marker.output import text_from_rendered
+
+        converter = PdfConverter(
+            artifact_dict=create_model_dict(),
+        )
+        rendered = converter(pdf_path)
+        text, _, _ = text_from_rendered(rendered)
+        return text
+    except ImportError:
+        print("Error: marker-pdf is not installed. Please install it with 'pip install \"contextpack[pdf]\"'")
+        return None
+    except Exception as e:
+        print(f"Error converting PDF: {e}")
+        return None

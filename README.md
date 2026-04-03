@@ -1,14 +1,13 @@
 # contextpack
 
-An open-source tool to extract high-quality context from websites and documentation for LLMs.
+A dead-simple tool to extract high-quality Markdown from any URL for LLMs.
 
 ## Features
 
-- **Query Documentation**: Crawl and extract content from documentation pages recursively.
-- **Ask Web**: Search the web and gather relevant context chunks ranked by similarity.
-- **LLM-Ready**: Outputs clean markdown optimized for LLM prompts.
-- **Library-First**: Can be used as a CLI tool or a Python library.
-- **Stateless & Portable**: Works as a standalone tool or a microservice component.
+- **Single Purpose**: Get clean, LLM-ready Markdown from a URL.
+- **PDF Support**: Convert online PDFs to high-quality Markdown using `marker-pdf`.
+- **Optional Local Storage**: Save results to a `.contextpack` folder.
+- **Zero Configuration**: No complex ranking, crawling, or embedding setups.
 
 ## Installation
 
@@ -18,62 +17,65 @@ This project uses Pixi and uv for dependency management.
 uv sync
 ```
 
-## CLI Usage
+### PDF Support (Optional)
 
-### Query Documentation
-Extract documentation context starting from a given page. You can control the recursion depth and maximum pages.
+To enable PDF to Markdown conversion, install with the `pdf` extra (requires PyTorch):
 
 ```bash
-# Query only this page (depth 0)
-uv run contextpack query https://docs.ros.org/en/humble/Concepts.html --depth 0
-
-# Full documentation crawl (default depth 2)
-uv run contextpack query https://docs.ros.org/en/humble/Concepts.html --depth 2 --max-pages 20
+pip install "contextpack[pdf]"
+# or with uv
+uv pip install "contextpack[pdf]"
 ```
 
-### Ask the Web
-Automatically gather relevant context from the web for a question. It uses DuckDuckGo to find sources and ranks content chunks by relevance.
+## CLI Usage
+
+### Get context to stdout
+Extract Markdown directly to your terminal.
 
 ```bash
-uv run contextpack ask "how ros2 qos works"
+uv run contextpack https://docs.ros.org/en/humble/Concepts.html
+```
+
+### Save context to folder
+Write the extracted content to a `.contextpack/` folder.
+
+```bash
+uv run contextpack https://docs.ros.org/en/humble/Concepts.html --write
+```
+
+### Convert PDF to Markdown
+Download a PDF and convert it using `marker-pdf`. Results are saved to `.contextpack/`.
+
+```bash
+uv run contextpack pdf https://arxiv.org/pdf/2303.08774.pdf
+```
+
+### Clear stored context
+Delete the `.contextpack/` folder and all its contents.
+
+```bash
+uv run contextpack --clear
 ```
 
 ## Python Library Usage
 
-The library is designed to be easily integrated into AI agents or pipelines.
-
 ```python
-from contextpack import query_url, ask_web
+from contextpack import get_url_context
 
-# Query documentation with custom depth
-result = query_url(
-    "https://docs.ros.org/en/humble/Concepts.html", 
-    max_depth=0, 
-    max_pages=1
-)
-print(result.context)
-
-# Ask the web
-result = ask_web("how ros2 qos works")
-print(result.context)
+content = get_url_context("https://docs.ros.org/en/humble/Concepts.html")
+print(content)
 ```
 
 ## Architecture
 
-The project follows a library-first architecture:
-- `api.py`: Core orchestration API.
-- `crawler.py`: Recursive documentation crawler (domain-constrained).
-- `scraper.py`: Content extraction using `trafilatura`.
-- `chunker.py`: Paragraph-aware text splitting.
-- `embeddings.py`: `sentence-transformers` integration (Lazy-loaded).
-- `ranker.py`: Cosine similarity ranking.
-- `formatter.py`: LLM-optimized Markdown formatting.
-- `cli.py`: `Typer` CLI wrapper.
+- `api.py`: Core logic for fetching, scraping, and PDF conversion.
+- `scraper.py`: Content extraction wrapper around `trafilatura`.
+- `cli.py`: Simplified CLI interface.
 
-## Performance Constraints
+## Contributing
 
-- **Max pages per run**: 10 (default), configurable via CLI.
-- **Crawl depth**: 2 (default), configurable via CLI.
-- **Request timeout**: 10 seconds.
-- **Content limit**: Skips pages larger than 1MB.
-- **Duplicates**: Automatically skips duplicate URLs within the same run.
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+
+## License
+
+This project is licensed under the terms provided in the [LICENSE](LICENSE) file.
