@@ -1,81 +1,50 @@
-# contextpack
+# 📦 contextpack
 
-A dead-simple tool to extract high-quality Markdown from any URL for LLMs.
+<p align="center">
+  <a href="https://github.com/theguega/contextpack/actions/workflows/release.yml"><img src="https://github.com/theguega/contextpack/actions/workflows/release.yml/badge.svg" alt="Release Status"></a>
+  <a href="https://theguega.github.io/contextpack/"><img src="https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg" alt="Documentation"></a>
+  <a href="https://pypi.org/project/contextpack/"><img src="https://img.shields.io/pypi/v/contextpack.svg" alt="PyPI version"></a>
+  <a href="https://github.com/theguega/contextpack/blob/main/LICENSE"><img src="https://img.shields.io/github/license/theguega/contextpack.svg" alt="License"></a>
+</p>
 
-## Features
+A dead-simple tool to extract high-quality Markdown from any URL or PDF, optimized for LLMs.
 
-- **Single Purpose**: Get clean, LLM-ready Markdown from a URL.
-- **PDF Support**: Convert online PDFs to high-quality Markdown using `marker-pdf`.
-- **Optional Local Storage**: Save results to a `.contextpack` folder.
-- **Zero Configuration**: No complex ranking, crawling, or embedding setups.
+## 🚀 Quick Start
 
-## Installation
-
-This project uses Pixi and uv for dependency management.
+Extract clean, LLM-ready Markdown from any URL in seconds.
 
 ```bash
-uv sync
+# Using uv (recommended)
+uvx contextpack web https://docs.python.org/3/
+
+# Download and convert PDF
+uvx contextpack pdf https://arxiv.org/pdf/1706.03762.pdf
 ```
 
-### PDF Support (Optional)
+## ✨ Key Features
 
-To enable PDF to Markdown conversion, install with the `pdf` extra (requires PyTorch):
+- **🎯 LLM-Ready Output**: Clean, readable Markdown with links, but no junk.
+- **📄 PDF Support**: High-fidelity PDF-to-Markdown conversion (via `marker-pdf`).
+- **📂 Local Caching**: Optional timestamped local storage in `~/.contextpack/`.
+- **⚡ Fast & Lean**: Built on top of `trafilatura` for superior extraction speed and quality.
+
+## 🛠️ Installation
 
 ```bash
+pip install contextpack
+
+# For PDF support (requires PyTorch)
 pip install "contextpack[pdf]"
-# or with uv
-uv pip install "contextpack[pdf]"
 ```
 
-## CLI Usage
+## 📖 Documentation
 
-### Get context to stdout
-Extract Markdown directly to your terminal.
+Full documentation is available at [https://theguega.github.io/contextpack/](https://theguega.github.io/contextpack/).
 
-```bash
-uv run contextpack https://docs.ros.org/en/humble/Concepts.html
-```
+## 🤝 Contributing
 
-### Save context to folder
-Write the extracted content to a `.contextpack/` folder.
+Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
-```bash
-uv run contextpack https://docs.ros.org/en/humble/Concepts.html --write
-```
+## ⚖️ License
 
-### Convert PDF to Markdown
-Download a PDF and convert it using `marker-pdf`. Results are saved to `.contextpack/`.
-
-```bash
-uv run contextpack pdf https://arxiv.org/pdf/2303.08774.pdf
-```
-
-### Clear stored context
-Delete the `.contextpack/` folder and all its contents.
-
-```bash
-uv run contextpack --clear
-```
-
-## Python Library Usage
-
-```python
-from contextpack import get_url_context
-
-content = get_url_context("https://docs.ros.org/en/humble/Concepts.html")
-print(content)
-```
-
-## Architecture
-
-- `api.py`: Core logic for fetching, scraping, and PDF conversion.
-- `scraper.py`: Content extraction wrapper around `trafilatura`.
-- `cli.py`: Simplified CLI interface.
-
-## Contributing
-
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-## License
-
-This project is licensed under the terms provided in the [LICENSE](LICENSE) file.
+MIT License. See [LICENSE](LICENSE) for more information.

@@ -1,8 +1,20 @@
 [project]
 name = "contextpack"
-version = "0.1.0"
+version = "0.1.1"
+description = "A dead-simple tool to extract high-quality Markdown from any URL or PDF for LLMs"
+readme = "README.md"
 requires-python = ">=3.11"
+license = { file = "LICENSE.md" }
 authors = [{ name = "Theo", email = "130441797+theguega@users.noreply.github.com" }]
+keywords = ["markdown", "scraper", "llm", "pdf", "converter"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
 
 dependencies = [
   "typer>=0.24.0,<0.25",
@@ -14,13 +26,26 @@ dependencies = [
 contextpack = "contextpack.cli:app"
 
 [project.optional-dependencies]
-dev = [
-  "ruff>=0.15.5,<0.16"
-]
 pdf = [
-  "marker-pdf>=0.3.14"
+    "marker-pdf>=1.10.2",
 ]
 
 [build-system]
 requires = ["uv_build>=0.11.3,<0.12"]
 build-backend = "uv_build"
+
+[tool.pyapp]
+project = "contextpack"
+module = "contextpack.cli"
+command = "app"
+python-version = "3.12"
+features = ["pip"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.2",
+    "ruff>=0.15.9",
+]
+
+[project.urls]
+Documentation = "https://theguega.github.io/contextpack/"
