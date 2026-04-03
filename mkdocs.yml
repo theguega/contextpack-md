@@ -12,7 +12,6 @@ plugins:
           handlers:
               python:
                   paths: [src]
-                  import_timeout: 60
                   options:
                       show_source: true
                       show_root_heading: true
