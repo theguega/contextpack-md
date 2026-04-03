@@ -29,6 +29,8 @@ jobs:
 
             - name: Publish
               run: uv publish
+              env:
+                  UV_PUBLISH_TOKEN: ${{ secrets.UV_PUBLISH_TOKEN }}
 
     build-binary:
         name: Build standalone binary
